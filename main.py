@@ -2,6 +2,8 @@ from types import NoneType
 from xml.dom.minidom import Element
 from xml.etree import ElementTree
 import re
+import classDependency
+import numpy as np 
 
 def check_none(value):
     if value == None:
@@ -15,28 +17,32 @@ namespaces = {'xmlns' : 'http://maven.apache.org/POM/4.0.0'}
 tree = ElementTree.parse(POM_FILE)
 root = tree.getroot()
 
+#Properties(versions)
 dickt = {}
 prop = root.findall(".//xmlns:properties", namespaces=namespaces)
 for elem in prop:
-#    print(elem.tag, elem.attrib)
     for p in elem:
         text = re.sub(r'\{[^()]*\}', '', p.tag)
-        dickt[str(text)] = p.text
- #       print(text, p.text)
+        if (text.find("version") != -1):
+            dickt[str(text)] = p.text
 
-
+# Dependencies
+dependencies = []
 deps = root.findall(".//xmlns:dependency", namespaces=namespaces)
-
-i = 0
 for d in deps:
     groupId = d.find("xmlns:groupId", namespaces=namespaces)
     artifactId = d.find("xmlns:artifactId", namespaces=namespaces)
     version    = d.find("xmlns:version", namespaces=namespaces)
     if version != NoneType:
-        print(str(i) + '. ' + check_none(groupId) + '\t' + check_none(artifactId) + '\t' + check_none(version))
-        i += 1
+        if check_none(version).find("${") != -1:
+            ver = str(check_none(version))[2:][:-1]
+            if ver in dickt:
+                dependencies.append(classDependency.Dependency(groupId.text, artifactId.text, dickt[ver]))
+            else:
+                print("Error, " + ver + " not found")
+        else:
+            dependencies.append(classDependency.Dependency(groupId.text, artifactId.text, check_none(version)))
 
-for key, value in dickt.items():
-    print(key, value)
-#for gp in dickt:
-#    print(gp, gp)
+for p in dependencies: 
+    print(p.groupId, p.artifactId, p.version)
+    
