@@ -66,12 +66,21 @@ def fix_vulnerability(name, version):
 def unload_packages_to_nexus(path):
     # Change rep registry
     subprocess.run(["npm", "set", "registry", url_dst], stdout=subprocess.PIPE)
+    res = Popen(["npm", "login"], stdout=subprocess.PIPE, stdin=subprocess.PIPE)
+    res.stdin.write(b"opikpo\nOpikpo495\ntmp@tmp.tmp\n")
+    outputlog, errorlog = res.communicate()
+    res.stdin.close()
+    #res.stdin.write(b"opikpo\nOpikpo495\ntmp@tmp.tmp\n")
+    #outputlog, errorlog = res.communicate()
+    #subprocess.run(["opikpo"], cwd=path, stdout=subprocess.PIPE)
+    #subprocess.run(["Opikpo495"], cwd=path, stdout=subprocess.PIPE)
+    #subprocess.run(["tmp@tmp.tmp"], cwd=path, stdout=subprocess.PIPE)
     try:
         subprocess.run(["npm", "set", "registry", url_dst], cwd=path, stdout=subprocess.PIPE)
     except:
         text_report += "\nUnload packages to nexus exception\n"
     # Restore rep registry
-    subprocess.run(["npm", "publish"], stdout=subprocess.PIPE)
+    subprocess.run(["npm", "publish"], cwd=path, stdout=subprocess.PIPE)
     return 0
 
 # Deletes all contents of a folder
@@ -122,7 +131,7 @@ def packet_processing():
         check = check_respones(respones)
         if (len(check) == 0):
             print("unload")
-            #unload_packages_to_nexus(tmp_folder)
+            unload_packages_to_nexus(tmp_folder)
         else:
             print("...")
         
