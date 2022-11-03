@@ -132,7 +132,7 @@ class Automizer:
             print("22222")
         # Restore rep registry
         print("3333")
-        out = subprocess.run(["npm", "set", "registry", self.url_dst], stdout=subprocess.PIPE)
+        out = subprocess.run(["npm", "set", "registry", self.url_src], stdout=subprocess.PIPE)
         return 0
 
     # Deletes all contents of a folder
