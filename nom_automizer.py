@@ -7,10 +7,10 @@ from time import sleep
 
 
 class Automizer:
-    def __init__(self, src_dat = "res.txt", dst_rep = ".", url_src = "https://registry.npmjs.com/", url_dst = "http://10.7.204.11:8081/repository/base-npm/"):
+    def __init__(self, src_dat = "res.txt", dst_rep = ".", url_src = "http://10.7.204.11:8081/repository/npmjs/", url_dst = "http://10.7.204.11:8081/repository/base-npm/"):
         self.src_dat = src_dat # path to data file
         self.dst_rep = dst_rep # path to save the report
-        self.url_src = url_src # "http://10.7.204.11:8081/repository/npmjs/" # url for upload packages
+        self.url_src = url_src # "https://registry.npmjs.com/" # url for upload packages
         self.url_dst = url_dst # url for unload packages
 
         self.text_report = []
