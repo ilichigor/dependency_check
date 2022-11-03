@@ -98,7 +98,6 @@ class Automizer:
     # [out] list with remark, if any, else - empty
     def unload_packages_to_nexus(self, path, name):
         # Change rep registry
-        print("registry")
         subprocess.run(["npm", "set", "registry", self.url_dst], stdout=subprocess.PIPE)
         res = subprocess.Popen(["npm", "login"], stdout=subprocess.PIPE, stdin=subprocess.PIPE, stderr=subprocess.PIPE)
         sleep(1)
@@ -114,24 +113,23 @@ class Automizer:
         stout = ""
         sterr = ""
         try:
-            print("!!!!", path + "/node_modules/" + name)
             res = subprocess.run(["npm", "publish", "--registry", self.url_dst], cwd=path + "/node_modules/" + name, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-            print("kokokokoko", res.stdout, res.stderr)
             stout = res.stdout
             sterr = res.stderr
         except:
             sterr = "error"
             self.text_report.append("\nError unload packages to nexus exception\n")
-        print("OKOKOKOK")
-        if sterr:
-            self.num_not_unloaded_pack = self.num_not_unloaded_pack + 1
+
+        if sterr != "error" and stout.find("ERR!") == -1 and sterr("ERR!") == -1:
+            self.num_unloaded_pack = self.num_unloaded_pack + 1
         else:
-            if self.search_approve(stout) == 1:
-                print("0202020")
-                self.num_unloaded_pack = self.num_unloaded_pack + 1
-            print("22222")
+            self.num_not_unloaded_pack = self.num_not_unloaded_pack + 1
+        #if sterr:
+        #    self.num_not_unloaded_pack = self.num_not_unloaded_pack + 1
+        #else:
+        #    if self.search_approve(stout) == 1:
+        #        self.num_unloaded_pack = self.num_unloaded_pack + 1
         # Restore rep registry
-        print("3333")
         out = subprocess.run(["npm", "set", "registry", self.url_src], stdout=subprocess.PIPE)
         return 0
 
@@ -197,8 +195,6 @@ class Automizer:
             else:
                 check = self.check_respones(respones)
                 if len(check) == 0:
-                    print("unload")
-                    print("unload", self.tmp_folder, name)
                     self.unload_packages_to_nexus(self.tmp_folder, name)
                 else:
                     self.num_not_unloaded_pack = self.num_not_unloaded_pack + 1
@@ -217,11 +213,6 @@ if __name__ == "__main__":
             \n-ud,  --url-dst <url>    Url for unload packages")
     else:
         automizer = Automizer()
-
-        print(automizer.search_approve("error"))
-        print(automizer.search_approve("+asdf"))
-        print(automizer.search_approve("+asdf\nasdf"))
-        print(automizer.search_approve("+asdf\nasdf\n+ zxcv"))
 
         try:
             automizer.packet_processing()
