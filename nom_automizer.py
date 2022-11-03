@@ -175,7 +175,7 @@ class Automizer:
                 check = self.check_respones(respones)
                 if len(check) == 0:
                     print("unload")
-                    #unload_packages_to_nexus(tmp_folder)
+                    unload_packages_to_nexus(tmp_folder)
                 else:
                     self.num_not_unloaded_pack = self.num_not_unloaded_pack + 1
                     self.text_report.append("\nError unload " + name + " " + version + "\n")
