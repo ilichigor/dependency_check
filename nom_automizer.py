@@ -106,14 +106,17 @@ class Automizer:
         stdout, stderr = res.communicate()
         print("registry finisht")
         print(os.getcwd())
+        result = ""
         try:
             print("!!!!", path + "/node_modules/" + name)
             res = subprocess.run(["npm", "publish", "--registry", self.url_dst], cwd=path + "/node_modules/" + name, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
             print("kokokokoko", res.stdout, res.stderr)
+            result = res.stdout
         except:
+            result = "error"
             self.text_report.append("\nError unload packages to nexus exception\n")
         print("OKOKOKOK")
-        if self.search_approve(res.stdout) == 1:
+        if self.search_approve(result) == 1:
             print("0202020")
             self.num_unloaded_pack = self.num_unloaded_pack + 1
             print("22222")
