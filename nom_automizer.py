@@ -122,7 +122,7 @@ class Automizer:
             self.text_report.append("\nError unload packages to nexus exception\n")
 
         print("12")
-        if sterr != "error" and stout.find("ERR!") == -1 and sterr("ERR!") == -1:
+        if sterr != "error" and stout.find("ERR!") == -1 and sterr.find("ERR!") == -1:
             print("14")
             self.num_unloaded_pack = self.num_unloaded_pack + 1
         else:
