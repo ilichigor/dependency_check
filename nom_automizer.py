@@ -44,7 +44,7 @@ class Automizer:
     # [out] respones from npm and error
     def load_package(self, name, version, folder):
         try:
-            output = subprocess.run(["npm", "install", name + "@" + version], cwd=folder, stdout=subprocess.PIPE, stderr=subprocess.PIPE, timeout=5)
+            output = subprocess.run(["npm", "install", name + "@" + version], cwd=folder, stdout=subprocess.PIPE, stderr=subprocess.PIPE, timeout=120)
         except subprocess.TimeoutExpired:
             self.text_report.append("\nTimeoutExpired npm install " + name + "@" + version)
             return "error", "error"
@@ -100,13 +100,13 @@ class Automizer:
         # Change rep registry
         subprocess.run(["npm", "set", "registry", self.url_dst], stdout=subprocess.PIPE)
         res = subprocess.Popen(["npm", "login"], stdout=subprocess.PIPE, stdin=subprocess.PIPE, stderr=subprocess.PIPE)
-        sleep(1)
+        sleep(0.5)
         res.stdin.write(b'opikpo\n')
         res.stdin.flush()
-        sleep(1)
+        sleep(0.5)
         res.stdin.write(b'Opikpo495\n')
         res.stdin.flush()
-        sleep(1)
+        sleep(0.5)
         res.stdin.write(b'tmp@tmp.tmp\n')
         res.stdin.flush()
         stdout, stderr = res.communicate()
