@@ -85,33 +85,41 @@ class Automizer:
         else:
             self.num_not_unloaded_pack = self.num_not_unloaded_pack + 1
             return 0
-        
-    # Submits an answer to a question
-    def submit_answer(answer):
-        sleep(1)
-        res.stdin.write(answer)
-        res.stdin.flush()
 
     # Publishes all dependencies from the current folder to the Nexus
     # [in] path to folder with package.json
     # [out] list with remark, if any, else - empty
     def unload_packages_to_nexus(self, path, name):
         # Change rep registry
+        print("registry")
         subprocess.run(["npm", "set", "registry", self.url_dst], stdout=subprocess.PIPE)
         res = subprocess.Popen(["npm", "login"], stdout=subprocess.PIPE, stdin=subprocess.PIPE, stderr=subprocess.PIPE)
-        submit_answer(b'opikpo\n')
-        submit_answer(b'Opikpo495\n')
-        submit_answer(b'tmp@tmp.tmp\n')
+        sleep(1)
+        res.stdin.write(b'opikpo\n')
+        res.stdin.flush()
+        sleep(1)
+        res.stdin.write(b'Opikpo495\n')
+        res.stdin.flush()
+        sleep(1)
+        res.stdin.write(b'tmp@tmp.tmp\n')
+        res.stdin.flush()
         stdout, stderr = res.communicate()
+        print("registry finisht")
         print(os.getcwd())
         try:
-            res = subprocess.run(["npm", "publish"], cwd=path + "/node_modules/" + name, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            print("!!!!", path + "/node_modules/" + name)
+            res = subprocess.run(["npm", "publish", "--registry", self.url_dst], cwd=path + "/node_modules/" + name, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            print("kokokokoko", res.stdout, res.stderr)
         except:
             self.text_report.append("\nError unload packages to nexus exception\n")
+        print("OKOKOKOK")
         if self.search_approve(res.stdout) == 1:
+            print("0202020")
             self.num_unloaded_pack = self.num_unloaded_pack + 1
+            print("22222")
         # Restore rep registry
-            out = subprocess.run(["npm", "set", "registry", self.url_dst], stdout=subprocess.PIPE)
+        print("3333")
+        out = subprocess.run(["npm", "set", "registry", self.url_dst], stdout=subprocess.PIPE)
         return 0
 
     # Deletes all contents of a folder
@@ -169,14 +177,16 @@ class Automizer:
 
             # Check packet
             respones, error = self.load_package(name, version, self.tmp_folder)
+            print(error)
             if error:
                 self.num_not_unloaded_pack  = self.num_not_unloaded_pack + 1
-                self.text_report.append("\nError unload " + name + " " + version + "\n")
+                self.text_report.append("\n!Error unload " + name + " " + version + "\n")
             else:
                 check = self.check_respones(respones)
                 if len(check) == 0:
                     print("unload")
-                    unload_packages_to_nexus(tmp_folder, name)
+                    print("unload", self.tmp_folder, name)
+                    self.unload_packages_to_nexus(self.tmp_folder, name)
                 else:
                     self.num_not_unloaded_pack = self.num_not_unloaded_pack + 1
                     self.text_report.append("\nError unload " + name + " " + version + "\n")
