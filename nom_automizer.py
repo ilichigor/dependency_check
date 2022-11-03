@@ -80,9 +80,16 @@ class Automizer:
     # Searches text for confirmation of package download
     # [out] 1 - package downloaded, else - 0
     def search_approve(self, text):
-        if (text.readlines()[-1]).find("+") != -1:
+        if text == "error" or text == None:
+            return 0
+        
+        lines = text.split('\n')
+        last_line = lines[len(lines)-1]
+        if last_line.find('+') != -1:
+            print("True FIND")
             return 1
         else:
+            print("False FIND")
             self.num_not_unloaded_pack = self.num_not_unloaded_pack + 1
             return 0
 
@@ -207,6 +214,11 @@ if __name__ == "__main__":
             \n-ud,  --url-dst <url>    Url for unload packages")
     else:
         automizer = Automizer()
+
+        print(automizer.search_approve("error"))
+        print(automizer.search_approve("+asdf"))
+        print(automizer.search_approve("+asdf\nasdf"))
+        print(automizer.search_approve("+asdf\nasdf\n+ zxcv"))
 
         try:
             automizer.packet_processing()
