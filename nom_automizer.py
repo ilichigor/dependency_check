@@ -112,6 +112,7 @@ class Automizer:
         stdout, stderr = res.communicate()
         stout = ""
         sterr = ""
+        print("1")
         try:
             res = subprocess.run(["npm", "publish", "--registry", self.url_dst], cwd=path + "/node_modules/" + name, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
             stout = res.stdout
@@ -120,10 +121,14 @@ class Automizer:
             sterr = "error"
             self.text_report.append("\nError unload packages to nexus exception\n")
 
+        print("12")
         if sterr != "error" and stout.find("ERR!") == -1 and sterr("ERR!") == -1:
+            print("14")
             self.num_unloaded_pack = self.num_unloaded_pack + 1
         else:
+            print("5")
             self.num_not_unloaded_pack = self.num_not_unloaded_pack + 1
+        print("13")
         #if sterr:
         #    self.num_not_unloaded_pack = self.num_not_unloaded_pack + 1
         #else:
@@ -131,6 +136,7 @@ class Automizer:
         #        self.num_unloaded_pack = self.num_unloaded_pack + 1
         # Restore rep registry
         out = subprocess.run(["npm", "set", "registry", self.url_src], stdout=subprocess.PIPE)
+        print("6")
         return 0
 
     # Deletes all contents of a folder
