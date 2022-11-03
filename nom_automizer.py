@@ -85,6 +85,12 @@ class Automizer:
         else:
             self.num_not_unloaded_pack = self.num_not_unloaded_pack + 1
             return 0
+        
+    # Submits an answer to a question
+    def submit_answer(answer):
+        sleep(1)
+        res.stdin.write(answer)
+        res.stdin.flush()
 
     # Publishes all dependencies from the current folder to the Nexus
     # [in] path to folder with package.json
@@ -93,15 +99,9 @@ class Automizer:
         # Change rep registry
         subprocess.run(["npm", "set", "registry", self.url_dst], stdout=subprocess.PIPE)
         res = subprocess.Popen(["npm", "login"], stdout=subprocess.PIPE, stdin=subprocess.PIPE, stderr=subprocess.PIPE)
-        sleep(1)
-        res.stdin.write(b'opikpo\n')
-        res.stdin.flush()
-        sleep(1)
-        res.stdin.write(b'Opikpo495\n')
-        res.stdin.flush()
-        sleep(1)
-        res.stdin.write(b'tmp@tmp.tmp\n')
-        res.stdin.flush()
+        submit_answer(b'opikpo\n')
+        submit_answer(b'Opikpo495\n')
+        submit_answer(b'tmp@tmp.tmp\n')
         stdout, stderr = res.communicate()
         try:
             subprocess.run(["npm", "set", "registry", self.url_dst], cwd=path, stdout=subprocess.PIPE)
@@ -127,9 +127,9 @@ class Automizer:
         filename = "report_" + now.strftime("%d-%m-%Y %H:%M") + ".log"
         file = open(self.dst_rep + "/report/" + filename, "w")
         file.write(text)
-        file.write("\n\n" + "TOTAL: " + str(self.total_pack))
-        file.write("\nUNLOADED PACKAGE: " + str(self.num_unloaded_pack))
-        file.write("\nNOT UNLOADED PACKAGE: " + str(self.num_not_unloaded_pack))
+        file.write("\n\n" + "TOTAL: " + str(self.total_pack) + \
+                   "\nUNLOADED PACKAGE: " + str(self.num_unloaded_pack) + \
+                   "\nNOT UNLOADED PACKAGE: " + str(self.num_not_unloaded_pack))
         file.close()
         return 0
 
