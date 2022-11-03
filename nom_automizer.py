@@ -104,13 +104,13 @@ class Automizer:
         submit_answer(b'tmp@tmp.tmp\n')
         stdout, stderr = res.communicate()
         try:
-            subprocess.run(["npm", "set", "registry", self.url_dst], cwd=path, stdout=subprocess.PIPE)
+            res = subprocess.run(["npm", "publish"], cwd=path + "/node_modules/", stdout=subprocess.PIPE)
         except:
             self.text_report.append("\nError unload packages to nexus exception\n")
-        # Restore rep registry
-        res = subprocess.run(["npm", "publish"], cwd=path + "/node_modules/", stdout=subprocess.PIPE)
         if self.search_approve(res.stdout) == 1:
             self.num_unloaded_pack = self.num_unloaded_pack + 1
+        # Restore rep registry
+            out = subprocess.run(["npm", "set", "registry", self.url_dst], stdout=subprocess.PIPE)
         return 0
 
     # Deletes all contents of a folder
