@@ -95,7 +95,7 @@ class Automizer:
     # Publishes all dependencies from the current folder to the Nexus
     # [in] path to folder with package.json
     # [out] list with remark, if any, else - empty
-    def unload_packages_to_nexus(self, path):
+    def unload_packages_to_nexus(self, path, name):
         # Change rep registry
         subprocess.run(["npm", "set", "registry", self.url_dst], stdout=subprocess.PIPE)
         res = subprocess.Popen(["npm", "login"], stdout=subprocess.PIPE, stdin=subprocess.PIPE, stderr=subprocess.PIPE)
@@ -103,8 +103,9 @@ class Automizer:
         submit_answer(b'Opikpo495\n')
         submit_answer(b'tmp@tmp.tmp\n')
         stdout, stderr = res.communicate()
+        print(os.getcwd())
         try:
-            res = subprocess.run(["npm", "publish"], cwd=path + "/node_modules/", stdout=subprocess.PIPE)
+            res = subprocess.run(["npm", "publish"], cwd=path + "/node_modules/" + name, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         except:
             self.text_report.append("\nError unload packages to nexus exception\n")
         if self.search_approve(res.stdout) == 1:
@@ -175,7 +176,7 @@ class Automizer:
                 check = self.check_respones(respones)
                 if len(check) == 0:
                     print("unload")
-                    unload_packages_to_nexus(tmp_folder)
+                    unload_packages_to_nexus(tmp_folder, name)
                 else:
                     self.num_not_unloaded_pack = self.num_not_unloaded_pack + 1
                     self.text_report.append("\nError unload " + name + " " + version + "\n")
