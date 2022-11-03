@@ -2,6 +2,7 @@ import sys
 import subprocess
 import os
 import shutil
+from time import sleep
 
 src_dat = "res.txt" # path to data file
 dst_rep = "."       # path to save the report
@@ -64,12 +65,24 @@ def fix_vulnerability(name, version):
 # [in] path to folder with package.json
 # [out] list with remark, if any, else - empty
 def unload_packages_to_nexus(path):
+    subprocess.run(["npm", "init", "-y", url_dst], stdout=subprocess.PIPE)
     # Change rep registry
     subprocess.run(["npm", "set", "registry", url_dst], stdout=subprocess.PIPE)
-    res = Popen(["npm", "login"], stdout=subprocess.PIPE, stdin=subprocess.PIPE)
-    res.stdin.write(b"opikpo\nOpikpo495\ntmp@tmp.tmp\n")
-    outputlog, errorlog = res.communicate()
-    res.stdin.close()
+    res = subprocess.Popen(["npm", "login"], stdout=subprocess.PIPE, stdin=subprocess.PIPE, stderr=subprocess.PIPE)
+    sleep(1)
+    res.stdin.write(b'opikpo\n')
+    res.stdin.flush()
+    sleep(1)
+    res.stdin.write(b'Opikpo495\n')
+    res.stdin.flush()
+    sleep(1)
+    res.stdin.write(b'tmp@tmp.tmp\n')
+    res.stdin.flush()
+    stdout, stderr = res.communicate()
+    print(stdout, stderr)
+    #res.stdin.write(b"opikpo\nOpikpo495\ntmp@tmp.tmp\n")
+    #outputlog, errorlog = res.communicate()
+    #res.stdin.close()
     #res.stdin.write(b"opikpo\nOpikpo495\ntmp@tmp.tmp\n")
     #outputlog, errorlog = res.communicate()
     #subprocess.run(["opikpo"], cwd=path, stdout=subprocess.PIPE)
