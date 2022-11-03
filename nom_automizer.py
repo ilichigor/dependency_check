@@ -90,7 +90,7 @@ class Automizer:
             else:
                 self.num_not_unloaded_pack = self.num_not_unloaded_pack + 1
                 return 0
-            except:
+        except:
                 return 0
 
     # Publishes all dependencies from the current folder to the Nexus
