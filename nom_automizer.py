@@ -80,11 +80,15 @@ class Automizer:
     # Searches text for confirmation of package download
     # [out] 1 - package downloaded, else - 0
     def search_approve(self, text):
+        print("a111")
+        print(text)
         if text == "error" or text == None:
             return 0
-        
+        print("a111")
         lines = text.split('\n')
+        print("a111")
         last_line = lines[len(lines)-1]
+        print("a111")
         if last_line.find('+') != -1:
             print("True FIND")
             return 1
@@ -113,20 +117,24 @@ class Automizer:
         stdout, stderr = res.communicate()
         print("registry finisht")
         print(os.getcwd())
-        result = ""
+        stout = ""
+        sterr = ""
         try:
             print("!!!!", path + "/node_modules/" + name)
             res = subprocess.run(["npm", "publish", "--registry", self.url_dst], cwd=path + "/node_modules/" + name, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
             print("kokokokoko", res.stdout, res.stderr)
-            result = res.stdout
+            stout = res.stdout
+            sterr = res.stderr
         except:
-            result = "error"
+            sterr = "error"
             self.text_report.append("\nError unload packages to nexus exception\n")
         print("OKOKOKOK")
-        if self.search_approve(result) == 1:
+        if sterr and self.search_approve(stout) == 1:
             print("0202020")
             self.num_unloaded_pack = self.num_unloaded_pack + 1
             print("22222")
+        else:
+            self.num_not_unloaded_pack = self.num_not_unloaded_pack + 1
         # Restore rep registry
         print("3333")
         out = subprocess.run(["npm", "set", "registry", self.url_dst], stdout=subprocess.PIPE)
