@@ -80,22 +80,18 @@ class Automizer:
     # Searches text for confirmation of package download
     # [out] 1 - package downloaded, else - 0
     def search_approve(self, text):
-        print("a111")
-        print(text)
-        if text == "error" or text == None:
-            return 0
-        print("a111")
-        lines = text.split('\n')
-        print("a111")
-        last_line = lines[len(lines)-1]
-        print("a111")
-        if last_line.find('+') != -1:
-            print("True FIND")
-            return 1
-        else:
-            print("False FIND")
-            self.num_not_unloaded_pack = self.num_not_unloaded_pack + 1
-            return 0
+        try:
+            if text == "error" or text == None:
+                return 0
+            lines = text.split('\n')
+            last_line = lines[len(lines)-1]
+            if last_line.find('+') != -1:
+                return 1
+            else:
+                self.num_not_unloaded_pack = self.num_not_unloaded_pack + 1
+                return 0
+            except:
+                return 0
 
     # Publishes all dependencies from the current folder to the Nexus
     # [in] path to folder with package.json
@@ -115,8 +111,6 @@ class Automizer:
         res.stdin.write(b'tmp@tmp.tmp\n')
         res.stdin.flush()
         stdout, stderr = res.communicate()
-        print("registry finisht")
-        print(os.getcwd())
         stout = ""
         sterr = ""
         try:
@@ -129,12 +123,13 @@ class Automizer:
             sterr = "error"
             self.text_report.append("\nError unload packages to nexus exception\n")
         print("OKOKOKOK")
-        if sterr and self.search_approve(stout) == 1:
-            print("0202020")
-            self.num_unloaded_pack = self.num_unloaded_pack + 1
-            print("22222")
-        else:
+        if sterr:
             self.num_not_unloaded_pack = self.num_not_unloaded_pack + 1
+        else:
+            if self.search_approve(stout) == 1:
+                print("0202020")
+                self.num_unloaded_pack = self.num_unloaded_pack + 1
+            print("22222")
         # Restore rep registry
         print("3333")
         out = subprocess.run(["npm", "set", "registry", self.url_dst], stdout=subprocess.PIPE)
