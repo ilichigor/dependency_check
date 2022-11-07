@@ -141,7 +141,10 @@ class Automizer:
         #        self.num_unloaded_pack = self.num_unloaded_pack + 1
         # Restore rep registry
         print("set registry")
-        out = subprocess.run(["npm", "set", "registry", self.url_src], stdout=subprocess.PIPE)
+        try:
+            out = subprocess.run(["npm", "set", "registry", self.url_src], stdout=subprocess.PIPE)
+        except:
+            print("except set registry")
         return 0
 
     # Deletes all contents of a folder
@@ -191,28 +194,31 @@ class Automizer:
             print("\n")
             self.total_pack = self.total_pack + 1
             os.mkdir(self.tmp_folder)
-            name, version = self.package_cleaning(line)
-            print(name, version)
+            try:
+                name, version = self.package_cleaning(line)
+                print(name, version)
 
-            # Check packet
-            respones, error = self.load_package(name, version, self.tmp_folder)
-            print(respones)
-            print(error)
-            if error:
-                self.num_not_unloaded_pack  = self.num_not_unloaded_pack + 1
-                self.text_report.append("\n!Error unload " + name + " " + version + "\n")
-            else:
-                check = self.check_respones(respones)
-                if len(check) == 0:
-                    self.unload_packages_to_nexus(self.tmp_folder, name)
+                # Check packet
+                respones, error = self.load_package(name, version, self.tmp_folder)
+                print(respones)
+                print(error)
+                if error:
+                    self.num_not_unloaded_pack  = self.num_not_unloaded_pack + 1
+                    self.text_report.append("\n!Error unload " + name + " " + version + "\n")
                 else:
-                    self.num_not_unloaded_pack = self.num_not_unloaded_pack + 1
-                    self.text_report.append("\nError(check-respones) unload " + name + " " + version + "\n")
-                    print("check", check)
-                    for remark in check:
-                        print("remark" + str(remark) + "\n")
-                        self.text_report.append(str(remark) + "\n")
-
+                    check = self.check_respones(respones)
+                    if len(check) == 0:
+                        self.unload_packages_to_nexus(self.tmp_folder, name)
+                    else:
+                        self.num_not_unloaded_pack = self.num_not_unloaded_pack + 1
+                        self.text_report.append("\nError(check-respones) unload " + name + " " + version + "\n")
+                        print("check", check)
+                        for remark in check:
+                            print("remark" + str(remark) + "\n")
+                            self.text_report.append(str(remark) + "\n")
+            except:
+                print("EXCEPT packet_processing")
+                self.text_report.append("EXCEPT packet_processing" + str(line) + "\n")
             self.clear_folder(self.tmp_folder)
 
 if __name__ == "__main__":
