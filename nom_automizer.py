@@ -122,19 +122,25 @@ class Automizer:
 
         sterr = str(sterr)
         stout = str(stout)
-        if sterr != "error" and stout.find("ERR!") == -1 and sterr.find("ERR!") == -1:
-            print("error unload", str(sterr), str(stout))
-            self.text_report.append("\nerror unload error:" + str(sterr) + " out: " + str(stout) + " name: "+ name)
-            self.num_unloaded_pack = self.num_unloaded_pack + 1
-        else:
-            self.text_report.append("\success unload " + name)
-            self.num_not_unloaded_pack = self.num_not_unloaded_pack + 1
+        try:
+            if sterr != "error" and stout.find("ERR!") == -1 and sterr.find("ERR!") == -1:
+                print("error unload")
+                print(str(sterr), str(stout))
+                self.text_report.append("\nerror unload error:" + str(sterr) + " out: " + str(stout) + " name: "+ name)
+                self.num_unloaded_pack = self.num_unloaded_pack + 1
+            else:
+                print("success unload")
+                self.text_report.append("\success unload " + name)
+                self.num_not_unloaded_pack = self.num_not_unloaded_pack + 1
+        except:
+            print("except unload respones (error/success)")
         #if sterr:
         #    self.num_not_unloaded_pack = self.num_not_unloaded_pack + 1
         #else:
         #    if self.search_approve(stout) == 1:
         #        self.num_unloaded_pack = self.num_unloaded_pack + 1
         # Restore rep registry
+        print("set registry")
         out = subprocess.run(["npm", "set", "registry", self.url_src], stdout=subprocess.PIPE)
         return 0
 
