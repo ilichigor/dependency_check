@@ -169,7 +169,10 @@ class Automizer:
         if line.find(" ") == -1 and line.find(",") == -1:
                 name, version = self.get_param(line)
         else:    
-            if line.find(',') != -1:
+            if line.find(' ') != -1:
+                line = line.split(' ')[0] + '\n'
+                name, version = self.get_param(line)
+            else:
                 line = line.split(',')[0] + '\n'
                 name, version = self.get_param(line)
         return name, version
@@ -187,7 +190,6 @@ class Automizer:
 
             # Check packet
             respones, error = self.load_package(name, version, self.tmp_folder)
-            print(respones)
             print(error)
             if error:
                 self.num_not_unloaded_pack  = self.num_not_unloaded_pack + 1
@@ -198,10 +200,8 @@ class Automizer:
                     self.unload_packages_to_nexus(self.tmp_folder, name)
                 else:
                     self.num_not_unloaded_pack = self.num_not_unloaded_pack + 1
-                    self.text_report.append("\nError(check-respones) unload " + name + " " + version + "\n")
-                    print("check", check)
+                    self.text_report.append("\nError unload " + name + " " + version + "\n")
                     for remark in check:
-                        print("remark" + str(remark) + "\n")
                         self.text_report.append(str(remark) + "\n")
 
             self.clear_folder(self.tmp_folder)
