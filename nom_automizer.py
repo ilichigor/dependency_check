@@ -123,8 +123,8 @@ class Automizer:
         sterr = str(sterr)
         stout = str(stout)
         if sterr != "error" and stout.find("ERR!") == -1 and sterr.find("ERR!") == -1:
-            print("error unload")
-            self.text_report.append("\nerror unload " + name)
+            print("error unload", str(sterr), str(stout))
+            self.text_report.append("\nerror unload error:" + str(sterr) + " out: " + str(stout) + " name: "+ name)
             self.num_unloaded_pack = self.num_unloaded_pack + 1
         else:
             self.text_report.append("\success unload " + name)
