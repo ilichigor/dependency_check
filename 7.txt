@@ -1,0 +1,15 @@
+	spring-web	5.3.23	org.springframework	NVD CVE-2016-1000027	
+Critical
+OSS Index 	23 Nov 2022	-	
+spring-security-web	5.7.4	org.springframework.security	NVD CVE-2022-31692	
+Critical
+OSS Index 	23 Nov 2022	-	
+scala-library	2.13.8	org.scala-lang	NVD CVE-2022-36944	
+Critical
+OSS Index 	23 Nov 2022	-	
+xnio-api	3.8.7.Final	org.jboss.xnio	NVD CVE-2022-0084	
+High
+OSS Index 	23 Nov 2022	-	
+kafka-clients	3.2.0	org.apache.kafka	NVD CVE-2022-34917	
+High
+OSS Index 	23 Nov 2022	-
