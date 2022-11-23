@@ -1,0 +1,18 @@
+	spring-web	5.3.22	org.springframework	NVD CVE-2016-1000027	
+Critical
+OSS Index 	23 Nov 2022	-	
+snakeyaml	1.30	org.yaml	NVD CVE-2022-25857	
+High
+OSS Index 	23 Nov 2022	-	
+jackson-databind	2.13.3	com.fasterxml.jackson.core	NVD CVE-2022-42003	
+High
+OSS Index 	23 Nov 2022	-	
+jackson-databind	2.13.3	com.fasterxml.jackson.core	NVD CVE-2022-42004	
+High
+OSS Index 	23 Nov 2022	-	
+undertow-core	2.2.18.Final	io.undertow	NVD CVE-2022-2053	
+High
+OSS Index 	23 Nov 2022	-	
+xnio-api	3.8.7.Final	org.jboss.xnio	NVD CVE-2022-0084	
+High
+OSS Index 	23 Nov 2022	-
