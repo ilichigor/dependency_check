@@ -1,0 +1,71 @@
+import org.springframework.boot.gradle.plugin.SpringBootPlugin
+
+buildscript {
+	ext {
+		springBootVer = '2.7.5'
+		springCloudVer = '2021.0.4'
+		undertow = '2.3.0.Final'
+		jackson = '2.14.0'
+		yaml = '1.33'
+		openapi = '1.6.12'
+	}
+}
+
+plugins {
+	id 'java'
+	id 'org.springframework.boot' version "${springBootVer}"
+}
+
+group = 'ru.sitronics.tn'
+sourceCompatibility = '17'
+
+configurations {
+	all {
+		exclude module: 'spring-boot-starter-tomcat'
+	}
+	springBom
+	cloudBom
+	annotationProcessor.extendsFrom springBom, cloudBom
+	implementation.extendsFrom springBom, cloudBom
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+	developmentOnly.extendsFrom springBom, cloudBom
+	runtimeClasspath {
+		extendsFrom developmentOnly
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+
+jar {
+	enabled = false
+}
+
+dependencies {
+	springBom platform(SpringBootPlugin.BOM_COORDINATES)
+	cloudBom platform("org.springframework.cloud:spring-cloud-dependencies:${springCloudVer}")
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+	implementation 'org.springframework.cloud:spring-cloud-config-client'
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
+	runtimeOnly "org.springdoc:springdoc-openapi-ui:${openapi}"
+	compileOnly 'org.projectlombok:lombok'
+	runtimeOnly 'org.springframework.boot:spring-boot-starter-undertow' exclude module: 'undertow-websockets-jsr'
+	runtimeOnly "io.undertow:undertow-core:${undertow}"
+	runtimeOnly "org.yaml:snakeyaml:${yaml}"
+	runtimeOnly "com.fasterxml.jackson.core:jackson-databind:${jackson}"
+	runtimeOnly 'org.postgresql:postgresql'
+	runtimeOnly 'org.springframework.boot:spring-boot-starter-actuator'
+	annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+	annotationProcessor 'org.projectlombok:lombok'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testImplementation 'org.springframework.security:spring-security-test'
+	testImplementation "org.mockito:mockito-core"
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}
