@@ -1,0 +1,6 @@
+	spring-web	5.3.23	org.springframework	NVD CVE-2016-1000027	
+Critical
+OSS Index 	23 Nov 2022	-	
+spring-security-web	5.7.4	org.springframework.security	NVD CVE-2022-31692	
+Critical
+OSS Index 	23 Nov 2022	-
