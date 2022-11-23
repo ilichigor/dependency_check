@@ -1,0 +1,6 @@
+	spring-web	5.3.23	org.springframework	NVD CVE-2016-1000027	
+Critical
+OSS Index 	23 Nov 2022	-	
+sshd-common	2.7.0	org.apache.sshd	NVD CVE-2022-45047	
+Critical
+OSS Index 	23 Nov 2022	-
