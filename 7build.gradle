@@ -1,0 +1,101 @@
+import org.springframework.boot.gradle.plugin.SpringBootPlugin
+
+buildscript {
+    ext {
+        springBootVer = '2.7.5'
+        openapi = '1.6.11'
+        jackson_datatype = '2.14.0-rc2'
+        queryDslVersion = '5.0.0'
+        h2 = '2.1.214'
+        testing = '7.6.1'
+        kafka = '2.9.0'
+        hibernate_types = '2.20.0'
+        rsql_jpa = '5.0.26'
+        jsonPatch = '1.13'
+        guava = '31.1-jre'
+        jcasbin = '1.31.1'
+        jsoup = '1.15.3'
+        undertow = '2.3.0.Final'
+        yaml = '1.33'
+        springCloudVer = '2021.0.4'
+    }
+}
+
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version "${springBootVer}"
+}
+
+group = 'ru.sitronics.tn'
+sourceCompatibility = '17'
+
+bootRun {
+    jvmArgs = ["-agentlib:jdwp=transport=dt_socket,server=y,address=8000,suspend=n"]
+}
+
+configurations {
+    all {
+        exclude module: 'spring-boot-starter-tomcat'
+    }
+    springBom
+    cloudBom
+    annotationProcessor.extendsFrom springBom, cloudBom
+    implementation.extendsFrom springBom,cloudBom
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+    developmentOnly.extendsFrom springBom, cloudBom
+    runtimeClasspath {
+        extendsFrom developmentOnly
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+jar {
+    enabled = false
+}
+
+dependencies {
+    springBom platform(SpringBootPlugin.BOM_COORDINATES)
+    cloudBom platform("org.springframework.cloud:spring-cloud-dependencies:${springCloudVer}")
+    implementation 'org.springframework.cloud:spring-cloud-config-client'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.boot:spring-boot-starter-undertow' exclude module: 'undertow-websockets-jsr'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'com.monitorjbl:json-view:1.1.0'
+    implementation "com.github.java-json-tools:json-patch:${jsonPatch}"
+    implementation "com.google.guava:guava:${guava}"
+
+    implementation "org.casbin:jcasbin:${jcasbin}"
+    implementation 'org.casbin:hibernate-adapter:1.0.1'
+
+    implementation "org.springframework.kafka:spring-kafka:${kafka}"
+    implementation "com.vladmihalcea:hibernate-types-52:${hibernate_types}"
+    implementation "io.github.perplexhub:rsql-jpa-spring-boot-starter:${rsql_jpa}"
+
+    implementation "org.jsoup:jsoup:${jsoup}"
+    implementation "org.springdoc:springdoc-openapi-ui:${openapi}"
+    implementation "com.fasterxml.jackson.datatype:jackson-datatype-hibernate5:${jackson_datatype}"
+    compileOnly 'org.projectlombok:lombok'
+    runtimeOnly "io.undertow:undertow-core:${undertow}"
+    runtimeOnly "org.yaml:snakeyaml:${yaml}"
+    runtimeOnly "com.h2database:h2:${h2}"
+    runtimeOnly 'org.postgresql:postgresql'
+    annotationProcessor 'org.projectlombok:lombok' //для dsl поискать
+    annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.security:spring-security-test'
+    testImplementation "org.mockito:mockito-core"
+    testImplementation "org.springframework.kafka:spring-kafka-test:${kafka}"
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}
