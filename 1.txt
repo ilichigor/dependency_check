@@ -1,0 +1,60 @@
+	loader-utils	1.4.0		NVD CVE-2022-37601	CWE-1321	
+Critical
+OSS Index 	23 Nov 2022	-	
+ejs	3.1.6		NVD CVE-2022-29078	CWE-74	
+Critical
+OSS Index 	23 Nov 2022	-	
+loader-utils	0.2.17		NVD CVE-2022-37601	CWE-1321	
+Critical
+OSS Index 	23 Nov 2022	-	
+loader-utils	2.0.2		NVD CVE-2022-37601	CWE-1321	
+Critical
+OSS Index 	23 Nov 2022	-	
+minimist	1.2.5		NVD CVE-2021-44906	CWE-1321	
+Critical
+OSS Index 	23 Nov 2022	-	
+async	2.6.3		NVD CVE-2021-43138	CWE-1321	
+High
+OSS Index 	23 Nov 2022	-	
+loader-utils	1.4.0		NVD CVE-2022-37599	-	
+High
+OSS Index 	23 Nov 2022	-	
+loader-utils	1.4.0		NVD CVE-2022-37603	-	
+High
+OSS Index 	23 Nov 2022	-	
+loader-utils	0.2.17		NVD CVE-2022-37599	-	
+High
+OSS Index 	23 Nov 2022	-	
+loader-utils	0.2.17		NVD CVE-2022-37603	-	
+High
+OSS Index 	23 Nov 2022	-	
+loader-utils	2.0.2		NVD CVE-2022-37599	-	
+High
+OSS Index 	23 Nov 2022	-	
+loader-utils	2.0.2		NVD CVE-2022-37603	-	
+High
+OSS Index 	23 Nov 2022	-	
+node-forge	1.2.1		NVD CVE-2022-24771	CWE-347	
+High
+OSS Index 	23 Nov 2022	-	
+node-forge	1.2.1		NVD CVE-2022-24772	CWE-347	
+High
+OSS Index 	23 Nov 2022	-	
+postcss	6.0.23		NVD CVE-2021-23382	-	
+High
+OSS Index 	23 Nov 2022	-	
+loader-utils	3.2.0		NVD CVE-2022-37599	-	
+High
+OSS Index 	23 Nov 2022	-	
+loader-utils	3.2.0		NVD CVE-2022-37603	-	
+High
+OSS Index 	23 Nov 2022	-	
+css-what	3.4.2		NVD CVE-2022-21222	CWE-400	
+High
+OSS Index 	23 Nov 2022	-	
+nth-check	1.0.2		NVD CVE-2021-3803	-	
+High
+OSS Index 	23 Nov 2022	-	
+terser	5.10.0		NVD CVE-2022-25858	-	
+High
+OSS Index 	23 Nov 2022	-	
