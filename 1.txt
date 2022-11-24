@@ -1,60 +1,172 @@
-	loader-utils	1.4.0		NVD CVE-2022-37601	CWE-1321	
-Critical
-OSS Index 	23 Nov 2022	-	
-ejs	3.1.6		NVD CVE-2022-29078	CWE-74	
-Critical
-OSS Index 	23 Nov 2022	-	
-loader-utils	0.2.17		NVD CVE-2022-37601	CWE-1321	
-Critical
-OSS Index 	23 Nov 2022	-	
-loader-utils	2.0.2		NVD CVE-2022-37601	CWE-1321	
-Critical
-OSS Index 	23 Nov 2022	-	
-minimist	1.2.5		NVD CVE-2021-44906	CWE-1321	
-Critical
-OSS Index 	23 Nov 2022	-	
-async	2.6.3		NVD CVE-2021-43138	CWE-1321	
-High
-OSS Index 	23 Nov 2022	-	
-loader-utils	1.4.0		NVD CVE-2022-37599	-	
-High
-OSS Index 	23 Nov 2022	-	
-loader-utils	1.4.0		NVD CVE-2022-37603	-	
-High
-OSS Index 	23 Nov 2022	-	
-loader-utils	0.2.17		NVD CVE-2022-37599	-	
-High
-OSS Index 	23 Nov 2022	-	
-loader-utils	0.2.17		NVD CVE-2022-37603	-	
-High
-OSS Index 	23 Nov 2022	-	
-loader-utils	2.0.2		NVD CVE-2022-37599	-	
-High
-OSS Index 	23 Nov 2022	-	
-loader-utils	2.0.2		NVD CVE-2022-37603	-	
-High
-OSS Index 	23 Nov 2022	-	
-node-forge	1.2.1		NVD CVE-2022-24771	CWE-347	
-High
-OSS Index 	23 Nov 2022	-	
-node-forge	1.2.1		NVD CVE-2022-24772	CWE-347	
-High
-OSS Index 	23 Nov 2022	-	
-postcss	6.0.23		NVD CVE-2021-23382	-	
-High
-OSS Index 	23 Nov 2022	-	
-loader-utils	3.2.0		NVD CVE-2022-37599	-	
-High
-OSS Index 	23 Nov 2022	-	
-loader-utils	3.2.0		NVD CVE-2022-37603	-	
-High
-OSS Index 	23 Nov 2022	-	
-css-what	3.4.2		NVD CVE-2022-21222	CWE-400	
-High
-OSS Index 	23 Nov 2022	-	
-nth-check	1.0.2		NVD CVE-2021-3803	-	
-High
-OSS Index 	23 Nov 2022	-	
-terser	5.10.0		NVD CVE-2022-25858	-	
-High
-OSS Index 	23 Nov 2022	-	
+import sys
+import os
+import requests
+import json
+
+class Creator:
+    def __init__(self, arg):
+        self.src = ""
+        self.url = ""
+        self.login = ""
+        self.password = ""
+        i = 1
+        for param in arg:
+            if param == "-s" or param == "--src":
+                self.src = arg[i]
+            if param == "-u" or param == "--url":
+                self.url = arg[i]
+            if param == "-l" or param == "--login":
+                self.login = arg[i]
+            if param == "-p" or param == "--password":
+                self.password = arg[i]
+            i = i + 1
+
+        print(self.src, self.url, self.login, self.password)
+
+    def delete_duplicate(self, packages):
+        lines_seen = set() # holds lines already seen
+
+        for line in packages:
+            if line not in lines_seen: # not a duplicate
+                lines_seen.add(line)
+                
+        return lines_seen
+
+    def get_list_unloaded(self, baseurl, login, password):
+        continuation_token = ""
+        list_packagees = set()
+        while continuation_token is not None:
+            url = baseurl
+            if continuation_token:
+                url += f"&continuationToken={continuation_token}"
+            response = requests.get(url, auth=(login, password))
+            response.raise_for_status()
+            res = json.loads(response.text)
+            continuation_token = res["continuationToken"]
+            for elem in res["items"]:
+                for it in elem["assets"]:
+                    list_packagees.add(it["npm"]["name"] + "@" + it["npm"]["version"])
+        return list_packagees
+
+    def delete_unloaded(self, list_packages, list_unloaded):
+        clear_packages = set()
+        for line in list_packages:
+            if line not in list_unloaded:
+                clear_packages.add(line)
+                
+        return clear_packages
+
+    def generate_res_file(self, packages):
+        outfile = open("packages.txt", "w")
+        for line in packages:
+            outfile.write(line+"\n")
+        outfile.close()
+
+    def clearing(self, line):
+        return line[0:(len(line)-1)]
+
+    def generalization(self):
+        packages = set()
+        all_line = 0
+        #bad_line = 0
+        #pack_found = 0
+        
+        file = open(self.src, 'r', encoding = 'utf-8')
+        #all_line = 0
+        #bad_line = 0
+        for line in file:
+            try:
+                if len(line) != 1:
+                    #all_line += 1
+                    line = line.replace('^', '')
+                    line = line.replace('~', '')
+                    if line.find("required") == -1 and line.find("invalid") == -1:
+                        #pack_found += 1
+                        if line.find("||") != -1:
+                            if line.find(">=") != -1:
+                                name = line[:line.rfind('@')] + '@' + line[line.rfind(">=") + 3:]
+                                packages.add(self.clearing(name))
+                            else:
+                                name = line[:line.rfind('@')] + '@' + line[line.rfind("|| ") + 3:]
+                                packages.add(self.clearing(name))
+                        else:
+                            if line.find(">=") != -1:
+                                name = line[:line.rfind('@')] + '@' + line[line.rfind(">=") + 3:]
+                                packages.add(self.clearing(name))
+                            else:
+                                if self.clearing(line).rfind('@') == 0 or self.clearing(line).rfind('@') == -1:
+                                    packages.add(self.clearing(line) + "@latest")
+                                else:    
+                                    packages.add(self.clearing(line))
+                    else:
+                        approve = 0
+                        first_package = ""
+                        second_package = ""
+
+                        if line.find(", required by ") != -1:
+                            approve += 1
+                            packs = line.split(", required by ")
+                            first_package = packs[0]
+                            second_package = self.clearing(packs[1])
+
+                        if line.find(" invalid: \"") != -1:
+                            approve += 1
+                            packs = line.split(" invalid: \"")
+                            first_package = packs[0]
+                            second_package = packs[1]
+                            second_package = first_package[:first_package.rfind('@')] + "@" + second_package.partition('"')[0]
+
+                        if approve == 1:
+                            #pack_found += 2
+                            packages.add(second_package)
+                            packages.add(first_package)
+                        #else:
+                            #bad_line += 1
+                            #print("Erroe parsing line " + str(all_line) + "\n" + line)
+            except:
+                print("Except global, line: " + line + "\n")
+        #print("All " + str(all_line) + " line, bad line: " + str(bad_line))
+        #print("Packages found: " + str(pack_found))
+
+        return packages
+        #self.generate_res_file(text)
+
+    def creator(self):
+        packages = set()
+        list_unloaded = set()
+        try:
+            packages = self.generalization()
+        except:
+            print("Generalization except")
+
+        try:
+            packages = self.delete_duplicate(packages)
+        except:
+            print("Delete duplicate except")
+
+        #try:
+        #    list_unloaded = self.get_list_unloaded(self.url, self.login, self.password)
+        #except:
+        #    print("Get list unloaded except")
+
+        #try:
+        #    packages = self.delete_unloaded(packages, list_unloaded)
+        #except:
+        #    print("Delete unloaded except")
+
+        try:
+            self.generate_res_file(packages)
+        except:
+            print("Generate result file except")
+        
+
+if __name__ == "__main__":
+    if len (sys.argv) != 9:
+        print ("Usage:\n./python npm_creator.py [options...] \
+            \n-s, --src <file> Path to file data \
+            \n-u, --url <url> Repository url \
+            \n-l, --login <text> Repository login \
+            \n-p, --password <text> Repository password ")
+    else:
+        creator = Creator(sys.argv)
+        creator.creator()
