@@ -1,0 +1,70 @@
+import org.springframework.boot.gradle.plugin.SpringBootPlugin
+
+buildscript {
+	ext {
+		spring = '2.7.2'
+		openapi = '1.6.9'
+	}
+
+	repositories {
+		mavenCentral()
+		jcenter()
+	}
+}
+
+plugins {
+	id 'org.springframework.boot' version "${spring}"
+	id 'io.spring.dependency-management' version '1.0.12.RELEASE'
+	id 'java'
+}
+
+group = 'ru.sitronics.mq_connector'
+version = '0.0.1-SNAPSHOT'
+
+configurations {
+	all {
+		exclude module: 'spring-boot-starter-tomcat'
+	}
+	springBom
+	annotationProcessor.extendsFrom springBom
+	implementation.extendsFrom springBom
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+	developmentOnly.extendsFrom springBom
+	runtimeClasspath {
+		extendsFrom developmentOnly
+	}
+}
+repositories {
+	mavenCentral()
+}
+
+jar {
+	enabled = false
+}
+
+dependencies {
+
+	springBom platform(SpringBootPlugin.BOM_COORDINATES)
+	implementation group: 'com.vladmihalcea', name: 'hibernate-types-52', version: '2.19.2'
+	implementation group: 'org.springframework.boot', name: 'spring-boot-starter-data-jpa', version: '2.7.4'
+	implementation group: 'com.google.code.gson', name: 'gson', version: '2.9.1'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
+	implementation "org.springdoc:springdoc-openapi-ui:$openapi"
+	compileOnly 'org.projectlombok:lombok'
+	runtimeOnly 'org.springframework.boot:spring-boot-starter-undertow' exclude module: 'undertow-websockets-jsr'
+	runtimeOnly 'org.postgresql:postgresql'
+	annotationProcessor 'org.projectlombok:lombok'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	implementation group: 'javax.xml.bind', name: 'jaxb-api', version: '2.3.0'
+	implementation group: 'com.ibm.mq', name: 'mq-jms-spring-boot-starter', version: '2.7.5'
+	implementation group: 'com.ibm.mq', name: 'com.ibm.mq.allclient', version: '9.3.0.0'
+	implementation group: 'org.springframework', name: 'spring-jms', version: '5.3.22'
+	implementation group: 'javax.jms', name: 'javax.jms-api', version: '2.0.1'
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}
